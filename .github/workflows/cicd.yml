@@ -1,0 +1,31 @@
+name: Project3 CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t project3-backend:${{ github.sha }} .
+
+      - name: Deploy Project3 backend
+        run: |
+          cd /home/aau/Desktop/Project3
+          ./vault/vaultscript.ssh
+
+      - name: Check containers
+        run: |
+          sudo docker compose -f /home/aau/Desktop/Project3/docker-compose.yml ps
+
+      - name: Test backend
+        run: |
+          curl --fail http://localhost:5000
