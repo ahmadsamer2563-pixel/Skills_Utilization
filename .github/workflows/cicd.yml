@@ -5,6 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ahmadsamer2563-pixel/skills_utilization
+
 jobs:
   build-and-deploy:
     runs-on: self-hosted
@@ -13,9 +21,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
+            -u "${{ github.actor }}" \
+            --password-stdin
+
       - name: Build Docker image
         run: |
-          docker build -t project3-backend:${{ github.sha }} .
+          docker build \
+            -t ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ghcr.io/${{ env.IMAGE_NAME }}:latest \
+            .
+
+      - name: Push image to GHCR
+        run: |
+          docker push ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy Project3 backend
         run: |
