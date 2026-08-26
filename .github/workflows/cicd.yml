@@ -24,7 +24,7 @@ jobs:
 
       - name: Check containers
         run: |
-          sudo docker compose -f /home/aau/Desktop/Project3/docker-compose.yml ps
+          docker compose -f /home/aau/Desktop/Project3/docker-compose.yml ps
 
       - name: Test backend
         run: |
