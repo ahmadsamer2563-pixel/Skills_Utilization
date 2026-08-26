@@ -26,6 +26,24 @@ jobs:
         run: |
           docker compose -f /home/aau/Desktop/Project3/docker-compose.yml ps
 
+      - name: Wait for backend
+        run: |
+          echo "Waiting for SkillMatch backend..."
+
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:5000 > /dev/null; then
+              echo "Backend is ready."
+              exit 0
+            fi
+
+            echo "Backend not ready yet... attempt $i/30"
+            sleep 2
+          done
+
+          echo "Backend failed to become ready."
+          docker logs project3-backend --tail 50
+          exit 1
+
       - name: Test backend
         run: |
           curl --fail http://localhost:5000
