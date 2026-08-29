@@ -115,6 +115,24 @@ jobs:
           cat security-results/trufflehog.txt || true
 
       # =========================
+      # SAVE RESULTS ON SERVER
+      # =========================
+      - name: Save security results on server
+        run: |
+          mkdir -p /home/aau/Desktop/Project3/security-results
+
+          cp security-results/bandit.txt \
+            /home/aau/Desktop/Project3/security-results/bandit.txt
+
+          cp security-results/hadolint.txt \
+            /home/aau/Desktop/Project3/security-results/hadolint.txt
+
+          cp security-results/trufflehog.txt \
+            /home/aau/Desktop/Project3/security-results/trufflehog.txt
+
+          echo "Security results saved on server."
+
+      # =========================
       # UPLOAD RESULTS
       # =========================
       - name: Upload security scan results
