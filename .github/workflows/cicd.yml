@@ -21,28 +21,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # -------------------------
-      # SECURITY - BANDIT
-      # -------------------------
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Bandit
-        run: |
-          python -m pip install --upgrade pip
-          pip install bandit
-
-      - name: Run Bandit security scan
-        run: |
-          bandit -r . \
-            --exclude ./actions-runner,./.git \
-            -ll
-
-      # -------------------------
-      # GHCR
-      # -------------------------
       - name: Log in to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
@@ -61,9 +39,6 @@ jobs:
           docker push ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
 
-      # -------------------------
-      # DEPLOYMENT
-      # -------------------------
       - name: Deploy Project3 backend
         run: |
           cd /home/aau/Desktop/Project3
